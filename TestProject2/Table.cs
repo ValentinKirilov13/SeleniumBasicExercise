@@ -1,7 +1,6 @@
-using System.Collections.ObjectModel;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Chrome;
+using System.Collections.ObjectModel;
 
 namespace TestProject2
 {
@@ -9,12 +8,16 @@ namespace TestProject2
     public class WorkingWithWebTable
     {
         IWebDriver driver;
+        ChromeOptions options;
 
         [SetUp]
         public void SetUp()
         {
+            options = new ChromeOptions();
+            options.AddArgument("--headless");
+
             // Create object of ChromeDriver
-            driver = new ChromeDriver();
+            driver = new ChromeDriver(options);
 
             // Add implicit wait
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -36,11 +39,11 @@ namespace TestProject2
             string path = System.IO.Directory.GetCurrentDirectory() + "/productinformation.csv";
 
             // If the file exists in the location, delete it
-                        if (File.Exists(path))
+            if (File.Exists(path))
                 File.Delete(path);
 
             // Traverse through table rows to find the table columns
-               foreach (IWebElement trow in tableRows)
+            foreach (IWebElement trow in tableRows)
             {
                 ReadOnlyCollection<IWebElement> tableCols = trow.FindElements(By.XPath("td"));
                 foreach (IWebElement tcol in tableCols)
